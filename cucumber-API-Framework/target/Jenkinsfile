@@ -1,32 +1,20 @@
 pipeline {
-    agent any
+ agent any
 
-    stages {
-        stage ('Build') {
-
-            steps {
+   stage('Build') {
+        steps {
                 withMaven(maven : 'Maven') {
                     bat 'mvn clean install'
                 }
             }
         }
 
-        stage ('Testing Stage') {
-
-            steps {
-                withMaven(maven : 'Maven') {
-                    bat 'mvn test'
-                }
-            }
-        }
-
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'Maven') {
-                    bat 'mvn deploy'
-                }
-            }
-        }
-    }
+    stage('artifact') {
+      
+      archive 'target/*.war'
+   }
+   stage ('deploy'){
+   echo 'deployment started'
+bat '''copy C:\\Tools\\JenkinsHome\\workspace\\cucumber_pipeline\\cucumber-API-Framework\\target\\*.jar C:\\Program Files\\Apache Software Foundation\\Tomcat9.0\\webapps\\'''
+   }
 }
